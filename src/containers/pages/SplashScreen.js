@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -8,17 +8,26 @@ import {
   StatusBar,
 } from 'react-native';
 
-function MainScreen() {
+function SplashScreen(props) {
+  useEffect(() => {
+    setTimeout(() => {
+      props.navigation.navigate('Login');
+    }, 2000);
+  }, [props.navigation]);
+
   return (
     <View style={styles.main}>
-      <Text>owlchat</Text>
+      <Text>SplashScreen</Text>
     </View>
   );
 }
 const styles = StyleSheet.create({
   main: {
-    backgroundColor: 'salmon',
+    backgroundColor: 'skyblue',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
   },
 });
 
-export default MainScreen;
+export default SplashScreen;

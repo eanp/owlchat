@@ -1,17 +1,15 @@
-import React from 'react';
-import {View, Text} from 'react-native';
-import {createAppContainer, createSwitchNavigator} from 'react-navigation';
+import React, {Component} from 'react';
+import {Root} from 'native-base';
+import Router from './src/config/router';
 
-import MainScreen from './src/containers/pages/MainScreen';
-import SplashScreen from './src/containers/pages/SplashScreen';
-
-// const AppContainer = createAppContainer(SwitchContainer);
-const App = () => {
-  return (
-    <>
-      <SplashScreen />
-    </>
-  );
-};
-
-export default App;
+export default class App extends Component {
+  render() {
+    return (
+      <>
+        <Root>
+          <Router />
+        </Root>
+      </>
+    );
+  }
+}
