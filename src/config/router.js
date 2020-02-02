@@ -4,7 +4,11 @@ import {createStackNavigator} from 'react-navigation-stack';
 import {createBottomTabNavigator} from 'react-navigation-tabs';
 
 import MmIcon from 'react-native-vector-icons/AntDesign';
+import MfIcon from 'react-native-vector-icons/Feather';
+import MoIcon from 'react-native-vector-icons/Octicons';
 
+import Location from '../containers/pages/Location';
+import User from '../containers/pages/User';
 import MainScreen from '../containers/pages/MainScreen';
 import SplashScreen from '../containers/pages/SplashScreen';
 
@@ -14,10 +18,63 @@ import Signup from '../containers/pages/Signup';
 
 import OneSignal from 'react-native-onesignal';
 
+const UserNav = createStackNavigator(
+  {
+    User: {
+      screen: User,
+      navigationOptions: {
+        headerShown: false,
+      },
+    },
+  },
+  {
+    initialRouteName: 'User',
+  },
+);
+UserNav.navigationOptions = ({navigation}) => {
+  let tabBarVisible = true;
+  if (navigation.state.index > 0) {
+    tabBarVisible = false;
+  }
+
+  return {
+    tabBarVisible,
+  };
+};
+const LocationNav = createStackNavigator(
+  {
+    Location: {
+      screen: Location,
+      navigationOptions: {
+        headerShown: false,
+      },
+    },
+  },
+  {
+    initialRouteName: 'Location',
+  },
+);
+LocationNav.navigationOptions = ({navigation}) => {
+  let tabBarVisible = true;
+  if (navigation.state.index > 0) {
+    tabBarVisible = false;
+  }
+
+  return {
+    tabBarVisible,
+  };
+};
+
 const MainScreenNav = createStackNavigator(
   {
     MainScreen: {
       screen: MainScreen,
+      navigationOptions: {
+        headerShown: false,
+      },
+    },
+    Chat: {
+      screen: Chat,
       navigationOptions: {
         headerShown: false,
       },
@@ -42,32 +99,27 @@ const BottomNav = createBottomTabNavigator(
     MainScreen: {
       screen: MainScreenNav,
       navigationOptions: {
+        title: 'owlchat',
         tabBarIcon: ({tintColor}) => {
-          return <MmIcon name="search1" size={25} color={tintColor} />;
+          return <MmIcon name="home" size={22} color={tintColor} />;
         },
       },
     },
     MainScreen2: {
-      screen: MainScreenNav,
+      screen: LocationNav,
       navigationOptions: {
+        title: 'location',
         tabBarIcon: ({tintColor}) => {
-          return <MmIcon name="search1" size={25} color={tintColor} />;
+          return <MoIcon name="location" size={22} color={tintColor} />;
         },
       },
     },
     MainScreen3: {
-      screen: MainScreenNav,
+      screen: UserNav,
       navigationOptions: {
+        title: 'user',
         tabBarIcon: ({tintColor}) => {
-          return <MmIcon name="search1" size={25} color={tintColor} />;
-        },
-      },
-    },
-    MainScreen4: {
-      screen: MainScreenNav,
-      navigationOptions: {
-        tabBarIcon: ({tintColor}) => {
-          return <MmIcon name="search1" size={25} color={tintColor} />;
+          return <MfIcon name="user" size={22} color={tintColor} />;
         },
       },
     },
@@ -78,12 +130,12 @@ const BottomNav = createBottomTabNavigator(
       labelStyle: {
         marginBottom: 5,
       },
-      activeTintColor: '#C81E1F',
-      inactiveTintColor: '#ACACAC',
+      activeTintColor: '#7C80EE',
+      inactiveTintColor: '#A2A7C0',
       style: {
         backgroundColor: 'white',
         borderTopColor: 'transparent',
-        marginVertical: 3,
+        height: 60,
       },
     },
   },
@@ -104,11 +156,10 @@ const SwitchNav = createSwitchNavigator(
     AppStack,
     SplashScreen: {screen: SplashScreen},
     Login: {screen: Login},
-    Chat: {screen: Chat},
     Signup: {screen: Signup},
   },
   {
-    initialRouteName: 'Login',
+    initialRouteName: 'SplashScreen',
   },
 );
 

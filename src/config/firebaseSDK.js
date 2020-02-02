@@ -119,6 +119,18 @@ class FirebaseSDK {
     return firebase.database().ref('Messages');
   }
 
+  send = messages => {
+    for (let i = 0; i < messages.length; i++) {
+      const {text, user} = messages[i];
+      const message = {
+        text,
+        user,
+        createdAt: this.timestamp,
+      };
+      this.ref.push(message);
+    }
+  };
+
   parse = snapshot => {
     const {timestamp: numberStamp, text, user} = snapshot.val();
     const {key: _id} = snapshot;
@@ -138,17 +150,7 @@ class FirebaseSDK {
   }
 
   // send the message to the Backend
-  send = messages => {
-    for (let i = 0; i < messages.length; i++) {
-      const {text, user} = messages[i];
-      const message = {
-        text,
-        user,
-        createdAt: this.timestamp,
-      };
-      this.ref.push(message);
-    }
-  };
+ 
 
   refOff() {
     this.ref.off();

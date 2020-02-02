@@ -1,99 +1,178 @@
 import React from 'react';
 import ImagePicker from 'react-native-image-picker';
-
+import {TextInput} from 'react-native-paper';
+import oc from '../../assets/splash.png';
 import {
   StyleSheet,
   Text,
-  TextInput,
   View,
   Button,
   ImageEditor,
   PermissionsAndroid,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  Keyboard,
+  Alert,
 } from 'react-native';
-
-import firebaseSDK from '../../config/firebaseSDK';
+import {Database, Auth} from '../../config/initialize';
 
 export default class Signup extends React.Component {
-  state = {
-    name: 'no name',
-    email: 'test@owlchat.com',
-    password: '123456',
-    avatar: '',
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: '',
+      password: '',
+      photo_users: null,
+      username: '',
+      status: '',
+      longitude: null,
+      latitude: null,
+      isLoading: false,
+      isSubmit: false,
+    };
+  }
 
-  onPressCreate = async () => {
-    try {
-      const user = {
-        name: this.state.name,
-        email: this.state.email,
-        password: this.state.password,
-      };
-      await firebaseSDK.createAccount(user);
-    } catch ({message}) {
-      console.log('create account failed. catch error:' + message);
+  async componentDidUpdate(prevProps, prevState) {
+    if (prevState.isSubmit !== this.state.isSubmit) {
+      await this.setState({
+        isLoading: false,
+      });
+      await this.register();
     }
-  };
+  }
 
-  onChangeTextEmail = email => this.setState({email});
-  onChangeTextPassword = password => this.setState({password});
-  onChangeTextName = name => this.setState({name});
-
-  onImageUpload = async () => {
+  async register() {
     try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.CAMERA,
-        {
-          title: 'Cool Photo App Camera Permission',
-          message:
-            'Cool Photo App needs access to your camera ' +
-            'so you can take awesome pictures.',
-          buttonNeutral: 'Ask Me Later',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
-        },
+      await this.setState({
+        isLoading: true,
+        isAuth: true,
+      });
+      const responseFirebase = await Auth.createUserWithEmailAndPassword(
+        this.state.email,
+        this.state.password,
       );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log('You can use the camera');
+      await this.clearState();
+      if (responseFirebase) {
+        const uid = await responseFirebase.user.uid;
+        const email = await responseFirebase.user.email;
+        await Database.ref('users/' + uid).set({
+          uid_users: uid,
+          email_users: email,
+          photo_users: '',
+          username: this.state.username,
+          status: 'offline',
+          longitude: '',
+          latitude: '',
+        });
+        await Alert.alert('Register Succes');
+        await this.props.navigation.navigate('Login');
       } else {
-        console.log('Camera permission denied');
+        await this.setState({
+          isLoading: false,
+        });
+        await Alert.alert(
+          'Error',
+          'Oops.. something error',
+          [
+            {
+              text: 'Ok',
+              style: 'cancel',
+            },
+          ],
+          {cancelable: false},
+        );
       }
-    } catch (err) {
-      console.warn(err);
+    } catch ({message}) {
+      await this.setState({
+        isLoading: false,
+      });
+      Alert.alert(
+        'Error',
+        message,
+        [
+          {
+            text: 'Ok',
+            style: 'cancel',
+          },
+        ],
+        {cancelable: false},
+      );
     }
-  };
+  }
+
+  onSubmit() {
+    Keyboard.dismiss();
+    this.setState({
+      isSubmit: true,
+      isLoading: true,
+    });
+  }
+
+  clearState() {
+    this.setState({
+      email: '',
+      password: '',
+    });
+  }
 
   render() {
     return (
-      <View>
-        <Text style={styles.title}>Email:</Text>
+      <View style={styles.main}>
+        <Text style={styles.titles}>owlchat</Text>
+        <View style={styles.logos}>
+          <Image source={oc} style={styles.oc} />
+        </View>
         <TextInput
-          style={styles.nameInput}
-          placeHolder="test@live.com"
-          onChangeText={this.onChangeTextEmail}
+          label="Email"
+          keyboardType="email-address"
           value={this.state.email}
+          onChangeText={value =>
+            this.setState({
+              email: value,
+            })
+          }
+          style={styles.textInput}
+          theme={{
+            colors: {primary: '#757EE3', underlineColor: '#A2A7C0'},
+          }}
         />
-        <Text style={styles.title}>Password:</Text>
         <TextInput
-          style={styles.nameInput}
-          onChangeText={this.onChangeTextPassword}
+          label="Password"
+          secureTextEntry
           value={this.state.password}
+          onChangeText={value =>
+            this.setState({
+              password: value,
+            })
+          }
+          style={styles.textInput}
+          theme={{
+            colors: {primary: '#757EE3', underlineColor: 'transparent'},
+          }}
         />
-        <Text style={styles.title}>Name:</Text>
         <TextInput
-          style={styles.nameInput}
-          onChangeText={this.onChangeTextName}
-          value={this.state.name}
+          label="Username"
+          value={this.state.username}
+          onChangeText={value =>
+            this.setState({
+              username: value,
+            })
+          }
+          style={styles.textInput}
+          theme={{
+            colors: {primary: '#757EE3', underlineColor: '#A2A7C0'},
+          }}
         />
-        <Button
-          title="Signup"
-          style={styles.buttonText}
-          onPress={this.onPressCreate}
-        />
-        <Button
-          title="Upload Avatar"
-          style={styles.buttonText}
-          onPress={this.onImageUpload}
-        />
+        <TouchableOpacity onPress={event => this.onSubmit(event)}>
+          <View style={styles.box}>
+            <Text style={styles.textbox}>Register</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => this.props.navigation.navigate('Login')}>
+          <Text style={styles.textsplash}>I have Account? Login</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -101,12 +180,17 @@ export default class Signup extends React.Component {
 
 const offset = 20;
 const styles = StyleSheet.create({
+  main: {
+    backgroundColor: '#E5EDF9',
+    alignItems: 'center',
+    flex: 1,
+  },
   title: {
     marginTop: offset,
     marginLeft: offset,
     fontSize: offset,
   },
-  nameInput: {
+  usernameInput: {
     height: offset * 2,
     margin: offset,
     paddingHorizontal: offset,
@@ -117,5 +201,50 @@ const styles = StyleSheet.create({
   buttonText: {
     marginLeft: offset,
     fontSize: 42,
+  },
+  logos: {},
+  titles: {
+    marginTop: 30,
+    fontSize: 32,
+    color: '#7C80EE',
+    fontWeight: 'bold',
+    fontFamily: 'Roboto',
+  },
+  oc: {
+    height: 150,
+    width: 150,
+    borderRadius: 30,
+    borderWidth: 8,
+    borderColor: '#F8A5A5',
+    marginTop: 5,
+    marginBottom: 20,
+  },
+  textInput: {
+    backgroundColor: '#FFF',
+    height: 50,
+    marginTop: 15,
+    color: '#eee',
+    marginBottom: 5,
+    fontSize: 12,
+    width: 250,
+  },
+  box: {
+    backgroundColor: '#7C80EE',
+    marginTop: 20,
+    height: 40,
+    width: 120,
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textbox: {
+    color: '#E2E3FB',
+    fontWeight: 'bold',
+    fontSize: 24,
+  },
+  textsplash: {
+    color: '#7D7FA2',
+    marginTop: 20,
+    fontSize: 18,
   },
 });
