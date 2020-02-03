@@ -83,24 +83,27 @@ export default class MainScreen extends Component {
   };
   render() {
     return (
-      <View style={{backgroundColor: '#E5EDF9', flex: 1}}>
-        <SafeAreaView>
-          {this.state.refreshing === true ? (
-            <ActivityIndicator
-              size="large"
-              color="#05A0E4"
-              style={{marginTop: 150}}
-            />
-          ) : (
-            <FlatList
-              style={{marginTop: 20}}
-              data={this.state.userList}
-              renderItem={this.renderItem}
-              keyExtractor={(item, index) => index.toString()}
-            />
-          )}
-        </SafeAreaView>
-      </View>
+      <>
+        <StatusBar barStyle="light-content" backgroundColor="#7C80EE" />
+        <View style={{backgroundColor: '#E5EDF9', flex: 1}}>
+          <SafeAreaView>
+            {this.state.refreshing === true ? (
+              <ActivityIndicator
+                size="large"
+                color="#05A0E4"
+                style={{marginTop: 150}}
+              />
+            ) : (
+              <FlatList
+                style={{marginTop: 20}}
+                data={this.state.userList}
+                renderItem={this.renderItem}
+                keyExtractor={(item, index) => index.toString()}
+              />
+            )}
+          </SafeAreaView>
+        </View>
+      </>
     );
   }
 }

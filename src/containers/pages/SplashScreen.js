@@ -11,29 +11,32 @@ import {
 import oc from '../../assets/splash.png';
 import {Auth} from '../../config/initialize';
 
-const { currentUser } = Auth;
+const {currentUser} = Auth;
 
 function SplashScreen(props) {
   useEffect(() => {
     setTimeout(() => {
-      if(currentUser === null)
+      if (currentUser === null) {
         props.navigation.navigate('Login');
-      else {
+      } else {
         props.navigation.navigate('MainScreen');
       }
     }, 3000);
   }, [props.navigation]);
 
   return (
-    <View style={styles.main}>
-      <View>
-        <Image source={oc} style={styles.oc} />
+    <>
+      <StatusBar barStyle="light-content" backgroundColor="#E5EDF9" />
+      <View style={styles.main}>
+        <View>
+          <Image source={oc} style={styles.oc} />
+        </View>
+        <Text style={styles.textsplash}>Chat from Owl People</Text>
+        <View style={styles.box}>
+          <Text style={styles.textbox}>OwlChat</Text>
+        </View>
       </View>
-      <Text style={styles.textsplash}>Chat from Owl People</Text>
-      <View style={styles.box}>
-        <Text style={styles.textbox}>OwlChat</Text>
-      </View>
-    </View>
+    </>
   );
 }
 const styles = StyleSheet.create({

@@ -184,9 +184,9 @@ export default class ChatRoom extends Component {
     // const {userName} = this.state;
     return (
       <>
-        <StatusBar barStyle="light-content" backgroundColor="#F3AC14" />
+        <StatusBar barStyle="light-content" backgroundColor="#7C80EE" />
         <View style={{flex: 1}}>
-          <View style={{height: 80, backgroundColor: '#7C80EE'}}>
+          <View style={{height: 80,marginTop:20, backgroundColor: '#7C80EE'}}>
             <View
               style={{
                 marginLeft: 10,
