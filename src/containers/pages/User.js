@@ -13,9 +13,8 @@ import {
   Dimensions,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-import {Database, Auth} from '../../config/initialize';
+import firebase from 'react-native-firebase';
 import SafeAreaView from 'react-native-safe-area-view';
-import firebase from 'firebase';
 import RNFetchBlob from 'react-native-fetch-blob';
 import ImagePicker from 'react-native-image-picker';
 import Geolocation from 'react-native-geolocation-service';
@@ -49,8 +48,8 @@ export default class MyProfile extends Component {
   handleLogout = async () => {
     await AsyncStorage.getItem('userid')
       .then(async userid => {
-        Database.ref('users/' + userid).update({status: 'Offline'});
-        Auth.signOut();
+        firebase.database().ref('users/' + userid).update({status: 'Offline'});
+        firebase.auth().signOut();
         ToastAndroid.show('Logout success', ToastAndroid.LONG);
         // this.props.navigation.navigate('Out');
         this.props.navigation.navigate('SplashScreen');

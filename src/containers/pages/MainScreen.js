@@ -12,7 +12,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-import {Database} from '../../config/initialize';
+import firebase from 'react-native-firebase';
 import {withNavigation} from 'react-navigation';
 
 export default class MainScreen extends Component {
@@ -27,7 +27,7 @@ export default class MainScreen extends Component {
   componentDidMount = async () => {
     const uid = await AsyncStorage.getItem('userid');
     this.setState({uid: uid, refreshing: true});
-    await Database.ref('/users').on('child_added', data => {
+    await firebase.database().ref('/users').on('child_added', data => {
       let person = data.val();
       if (person.uid_users != uid) {
         this.setState(prevData => {

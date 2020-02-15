@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import {TextInput} from 'react-native-paper';
 import oc from '../../assets/splash.png';
-import {Database, Auth} from '../../config/initialize';
+import firebase from 'react-native-firebase';
 import AsyncStorage from '@react-native-community/async-storage';
 import Geolocation from 'react-native-geolocation-service';
 
@@ -118,10 +118,9 @@ export default class Login extends React.Component {
 
   async authentication() {
     try {
-      const responseFirebase = await Auth.signInWithEmailAndPassword(
-        this.state.email,
-        this.state.password,
-      );
+      const responseFirebase = await firebase
+        .auth()
+        .signInWithEmailAndPassword(this.state.email, this.state.password);
       await this.clearState();
       if (responseFirebase) {
         await this.setState({
@@ -139,25 +138,39 @@ export default class Login extends React.Component {
         //     }
         //   },
         // );
-        
-        await Database.ref('/users/')
-        .on('value', result => {
-          let data = result.val();
-          if (data !== null) {
-            let user = Object.values(data);
-            AsyncStorage.setItem('user.email_users', user[0].email_users);
-              AsyncStorage.setItem('user.name', user[0].username);
-              AsyncStorage.setItem('user.photo_users', user[0].photo_users);
-          }
-        });
 
-        await Database.ref('/users/' + responseFirebase.user.uid).update({
-          status: 'Online',
-          latitude: this.state.latitude || null,
-          longitude: this.state.longitude || null,
-        });
+        // await firebase.database().ref('/users/'+ responseFirebase.user.uid)
+        // .on('value', result => {
+        //   let data = result.val();
+        //   if (data !== null) {
+        //     let user = Object.values(data);
+        //     AsyncStorage.setItem('user.email_users', user[0].email_users);
+        //       AsyncStorage.setItem('user.name', user[0].username);
+        //       AsyncStorage.setItem('user.photo_users', user[0].photo_users);
+        //   }
+        // });
+
+        await firebase
+          .database()
+          .ref('/users/' + responseFirebase.user.uid)
+          .update({
+            status: 'Online',
+            latitude: this.state.latitude || null,
+            longitude: this.state.longitude || null,
+          });
         await AsyncStorage.setItem('userid', responseFirebase.user.uid);
-        // await AsyncStorage.setItem('user', responseFirebase.user);
+        await firebase
+          .database()
+          .ref('/users/' + responseFirebase.user.uid)
+          .on('value', data => {
+              // let user = Object.values(data);
+              let user = data.val()
+              AsyncStorage.setItem('user.email_users', user.email_users);
+              AsyncStorage.setItem('user.name', user.username);
+              AsyncStorage.setItem('user.photo_users', user.photo_users);
+            
+          });
+
         ToastAndroid.show('Login success', ToastAndroid.LONG);
         await this.props.navigation.navigate('AppStack');
       } else {

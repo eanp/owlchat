@@ -5,7 +5,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {GiftedChat, Bubble, Send, InputToolbar} from 'react-native-gifted-chat';
 import {Database} from '../../config/initialize';
 import {withNavigation} from 'react-navigation';
-import firebase from 'firebase';
+import firebase from 'react-native-firebase';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Foundation from 'react-native-vector-icons/Foundation';

@@ -168,7 +168,30 @@ const AppContainer = createAppContainer(SwitchNav);
 class Router extends Component {
   constructor(props) {
     super(props);
-    OneSignal.init('42c6ef87-b4d7-44d1-983d-749dd12ddcc5');
+    OneSignal.init('6c2bd3eb-2d0d-4c41-acea-74b268424ba4');
+    OneSignal.addEventListener('received', this.onReceived);
+    OneSignal.addEventListener('opened', this.onOpened);
+    OneSignal.addEventListener('ids', this.onIds);
+  }
+  componentWillUnmount() {
+    OneSignal.removeEventListener('received', this.onReceived);
+    OneSignal.removeEventListener('opened', this.onOpened);
+    OneSignal.removeEventListener('ids', this.onIds);
+  }
+
+  onReceived(notification) {
+    console.log('Notification received: ', notification);
+  }
+
+  onOpened(openResult) {
+    console.log('Message: ', openResult.notification.payload.body);
+    console.log('Data: ', openResult.notification.payload.additionalData);
+    console.log('isActive: ', openResult.notification.isAppInFocus);
+    console.log('openResult: ', openResult);
+  }
+
+  onIds(device) {
+    console.log('Device info: ', device);
   }
 
   render() {

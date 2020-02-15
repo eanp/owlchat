@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "468351993817",
-    "firebase_url": "https://owlc-ea244.firebaseio.com",
-    "project_id": "owlc-ea244",
-    "storage_bucket": "owlc-ea244.appspot.com"
+    "project_number": "349515904716",
+    "firebase_url": "https://owlchat-94f62.firebaseio.com",
+    "project_id": "owlchat-94f62",
+    "storage_bucket": "owlchat-94f62.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:468351993817:android:898be2e7a10c19adc17bc8",
+        "mobilesdk_app_id": "1:349515904716:android:f28ea8354d353a16c5f469",
         "android_client_info": {
           "package_name": "com.owlchat"
         }
       },
       "oauth_client": [
         {
-          "client_id": "468351993817-0lpendnve5c3ofggb41ggqan3vbjcb8a.apps.googleusercontent.com",
+          "client_id": "349515904716-m8ctc8a94u8os9ld22hon30rtjjjrcfp.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDo6rsyTM7C5BC6Ycf4YjpaKwDoCwVHRQs"
+          "current_key": "AIzaSyAJJ72Kl-xZRKhBBUky5FKepGIb5mZa_6M"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "468351993817-0lpendnve5c3ofggb41ggqan3vbjcb8a.apps.googleusercontent.com",
+              "client_id": "349515904716-m8ctc8a94u8os9ld22hon30rtjjjrcfp.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

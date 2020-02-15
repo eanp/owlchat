@@ -10,10 +10,11 @@ import {
 } from 'react-native';
 import oc from '../../assets/splash.png';
 import {Auth} from '../../config/initialize';
-
-const {currentUser} = Auth;
+import firebase from 'react-native-firebase';
 
 function SplashScreen(props) {
+  const {currentUser} = firebase.auth();
+
   useEffect(() => {
     setTimeout(() => {
       if (currentUser === null) {
@@ -22,7 +23,7 @@ function SplashScreen(props) {
         props.navigation.navigate('MainScreen');
       }
     }, 3000);
-  }, [props.navigation]);
+  }, [currentUser, props.navigation]);
 
   return (
     <>

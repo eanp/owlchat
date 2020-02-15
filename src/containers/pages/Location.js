@@ -11,7 +11,7 @@ import {
 import AsyncStorage from '@react-native-community/async-storage';
 import MapView, {Marker} from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
-import {Database} from '../../config/initialize';
+import firebase from 'react-native-firebase';
 
 const {width, height} = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -36,7 +36,7 @@ export default class Location extends Component {
   getUser = async () => {
     const uid = await AsyncStorage.getItem('userid');
     this.setState({uid: uid});
-    Database.ref('/users').on('child_added', result => {
+    firebase.database().ref('/users').on('child_added', result => {
       let data = result.val();
       if (data !== null && data.id != uid) {
         // console.log(data);

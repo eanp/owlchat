@@ -15,7 +15,7 @@ import {
   Keyboard,
   Alert,
 } from 'react-native';
-import {Database, Auth} from '../../config/initialize';
+import firebase from 'react-native-firebase';
 
 export default class Signup extends React.Component {
   constructor(props) {
@@ -48,23 +48,25 @@ export default class Signup extends React.Component {
         isLoading: true,
         isAuth: true,
       });
-      const responseFirebase = await Auth.createUserWithEmailAndPassword(
-        this.state.email,
-        this.state.password,
-      );
+      const responseFirebase = await firebase
+        .auth()
+        .createUserWithEmailAndPassword(this.state.email, this.state.password);
       await this.clearState();
       if (responseFirebase) {
         const uid = await responseFirebase.user.uid;
         const email = await responseFirebase.user.email;
-        await Database.ref('users/' + uid).set({
-          uid_users: uid,
-          email_users: email,
-          photo_users: '',
-          username: this.state.username,
-          status: 'offline',
-          longitude: '',
-          latitude: '',
-        });
+        await firebase
+          .database()
+          .ref('users/' + uid)
+          .set({
+            uid_users: uid,
+            email_users: email,
+            photo_users: '',
+            username: this.state.username,
+            status: 'offline',
+            longitude: '',
+            latitude: '',
+          });
         await Alert.alert('Register Succes');
         await this.props.navigation.navigate('Login');
       } else {
